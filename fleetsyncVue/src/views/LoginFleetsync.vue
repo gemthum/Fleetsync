@@ -32,7 +32,7 @@ export default {
   methods: {
     async handleLogin() {
       try {
-        const response = await axios.post('http://3.129.63.121:3000/auth/login', {
+        const response = await axios.post('http://localhost:3001/auth/login', {
           username: this.username,
           password: this.password
         });

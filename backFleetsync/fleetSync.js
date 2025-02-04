@@ -10,7 +10,7 @@ const encontrak = require('./datafetch/encontrak');
 
 const app = express();
 app.use(cors());
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 async function processData() {
   try {
@@ -33,7 +33,7 @@ async function processData() {
       let etapa = 'Sin etapa';
       let tipo = 'No encontrado';
       let timeDifference;
-      tipo = units.TIPO;
+      tipo = unit.TIPO;
     
       if (task) {
         const client = clients.find((c) => c.CLIENTE_ID === task.CLIENTE);
