@@ -9,7 +9,11 @@ const encontrak = require('./datafetch/encontrak');
 
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'http://ssusa.zapto.org:3000', // Allow requests from your Vue app
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // Allow cookies and authentication headers
+}));
 const PORT = process.env.PORT || 3001;
 
 async function processData() {

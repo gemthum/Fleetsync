@@ -32,9 +32,11 @@ export default {
   methods: {
     async handleLogin() {
       try {
-        const response = await axios.post('http://localhost:3001/auth/login', {
-          username: this.username,
-          password: this.password
+        const response = await axios.post('http://ssusa.zapto.org:3001/auth/login', {
+        username: this.username,
+        password: this.password
+        }, {
+        withCredentials: true // Allow cookies and authentication headers
         });
         if (response.data.token) {
           localStorage.setItem('token', response.data.token); // Save token to local storage
