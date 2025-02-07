@@ -40,7 +40,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await fetch('http://3.129.63.121:3000/availability');
+        const response = await fetch('http://ssusa.zapto.org:3001/availability');
         const token = localStorage.getItem('token');
         console.log(token);
         console.log('dashboardfleetsync');
