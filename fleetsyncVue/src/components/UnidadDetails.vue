@@ -8,6 +8,9 @@
     <p><strong>Estatus:</strong> {{ unidad.ESTATUS }}</p>
     <p><strong>Localización:</strong> {{ unidad.LOCALIZACION }}</p>
     <p><strong>OT:</strong> {{ unidad.OT }}</p>
+    <p><strong>Contacto:</strong> {{ unidad.CONTACTO }}</p>
+    <p><strong>Responsable:</strong> {{ unidad.RESPONSABLE }}</p>
+    <p><strong>Fecha Compromiso:</strong> {{ unidad.FECHA_VENCIMIENTO }}</p>
     <p><strong>Horas:</strong> {{ unidad.HORAS }}</p>
     <p><strong>Cliente:</strong> {{ unidad.CLIENTE }}</p>
     <p><strong>Asunto OT:</strong> {{ unidad.ASUNTO }}</p>

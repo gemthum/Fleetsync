@@ -35,7 +35,10 @@ async function processData() {
       let clienteName = 'Cliente no encontrado';
       let asunto = 'Sin asunto';
       let etapa = 'Sin etapa';
+      let contacto = 'Sin contacto';
+      let responsable = 'Sin responsable';
       let tipo = 'No encontrado';
+      let fechavencimiento = 'Sin fecha';
       let timeDifference;
       tipo = unit.TIPO;
     
@@ -45,6 +48,9 @@ async function processData() {
           clienteName = client.NOMBRE;
           asunto = task.ASUNTO;
           etapa = task.ETAPA;
+          contacto = task.CONTACTO;
+          responsable = task.RESPONSABLE;
+          fechavencimiento = task.FECHA_VENCIMIENTO + ' ' + task.HORA_VENCIMIENTO;
         }   
     
         // Calculate time difference if FECHA_INICIO and HORA_INICIO are available
@@ -67,13 +73,16 @@ async function processData() {
       return {
         UNIDAD: unit.UNIDAD,
         ESTATUS: task ? 'Ocupada' : 'Disponible',
-        LOCALIZACION: gps ? gps.asentamientoGeoreferencia : 'Ubicacion no disponible',
+        LOCALIZACION: gps ? gps.estadoGeoreferencia + ', ' + gps.municipioGeoreferencia + ', ' + gps.asentamientoGeoreferencia : 'Ubicacion no disponible',
         OT: task ? task.FOLIO : 'SIN FOLIO',
         HORAS: timeDifferenceHours !== null ? timeDifference : 'N/A',
         CLIENTE: clienteName, // Add the client's name here
         ASUNTO : asunto,
         ETAPA: etapa,
         TIPO: tipo,
+        CONTACTO : contacto,
+        RESPONSABLE : responsable,
+        FECHA_VENCIMIENTO : fechavencimiento,
       };
     });
 
