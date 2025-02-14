@@ -40,6 +40,7 @@ async function processData() {
       let tipo = 'No encontrado';
       let fechavencimiento = 'Sin fecha';
       let timeDifference;
+      let fechainicio = 'Sin fecha inicio';
       tipo = unit.TIPO;
     
       if (task) {
@@ -50,23 +51,26 @@ async function processData() {
           etapa = task.ETAPA;
           contacto = task.CONTACTO;
           responsable = task.RESPONSABLE;
-          fechavencimiento = task.FECHA_VENCIMIENTO + ' ' + task.HORA_VENCIMIENTO;
+          fechavencimiento = task.FECHA_HORA_VENCIMIENTO;
+          fechainicio = task.FECHA_HORA_INICIO;
         }   
     
         // Calculate time difference if FECHA_INICIO and HORA_INICIO are available
         if (task.FECHA_INICIO && task.HORA_INICIO) {
           const startDate = new Date(task.FECHA_INICIO);
-          const startTime = new Date(task.HORA_INICIO);
-          startDate.setHours(startTime.getHours(), startTime.getMinutes(), startTime.getSeconds());
-    
+          // const startTime = new Date(task.HORA_INICIO);
+          const hours = task.HORA_INICIO.getHours();
+          const minutes = task.HORA_INICIO.getMinutes();
+          startDate.setHours(hours, minutes, 0, 0);
           const now = new Date();
           const timeDifferenceMs = now - startDate;
+
           timeDifferenceHours = (timeDifferenceMs / (1000 * 60 * 60)).toFixed(2);
     
-          const hours = Math.floor(timeDifferenceMs / (1000 * 60 * 60)); // Total hours
-          const minutes = Math.floor((timeDifferenceMs % (1000 * 60 * 60)) / (1000 * 60)); // Total minutes
+          const totalhours = Math.floor(timeDifferenceMs / (1000 * 60 * 60)); // Total hours
+          const totalminutes = Math.floor((timeDifferenceMs % (1000 * 60 * 60)) / (1000 * 60)); // Total minutes
     
-          timeDifference = `${hours} Horas ${minutes} minutos`;
+          timeDifference = `${totalhours} Horas ${totalminutes} minutos`;
         }
       }
     
@@ -83,6 +87,7 @@ async function processData() {
         CONTACTO : contacto,
         RESPONSABLE : responsable,
         FECHA_VENCIMIENTO : fechavencimiento,
+        FECHA_INICIO : fechainicio,
       };
     });
 
