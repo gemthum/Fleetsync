@@ -9,7 +9,7 @@
         </div>
         <div class="input-group">
           <img src="../assets/padlock_icon.png" alt="Password Icon" />
-          <input v-model="password" placeholder="Contraseña" required />
+          <input v-model="password" type="password" placeholder="Contraseña" required />
         </div>
         <button type="submit">LOGIN</button>
         <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
