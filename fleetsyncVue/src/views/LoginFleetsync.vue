@@ -32,7 +32,13 @@ export default {
   methods: {
     async handleLogin() {
       try {
-        const response = await axios.post('http://ssusa.zapto.org:3001/auth/login', {
+        /*const response = await axios.post('http://ssusa.zapto.org:3001/auth/login', {
+        username: this.username,
+        password: this.password
+        }, {
+        withCredentials: true // Allow cookies and authentication headers
+        });*/
+        const response = await axios.post('http://localhost:3001/auth/login', {
         username: this.username,
         password: this.password
         }, {

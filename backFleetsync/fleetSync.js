@@ -9,16 +9,17 @@ const encontrak = require('./datafetch/encontrak');
 
 
 const app = express();
-app.use(cors({
+/*app.use(cors({
   origin: 'http://ssusa.zapto.org:3000', // Allow requests from your Vue app
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, // Allow cookies and authentication headers
-}));
+})); */
+app.use(cors());
 const PORT = process.env.PORT || 3001;
 
 async function processData() {
   try {
-    const units = await DWH.fetchDWHdata('select SU.*, C.VALOR_DESPLEGADO AS TIPO from SSUSA_UNIDADES_ACTIVAS SU left join activos_fijos A ON SU.ACTIVO_FIJO_ID = A.ACTIVO_FIJO_ID LEFT JOIN libres_act_fijos B ON A.ACTIVO_FIJO_ID = B.ACTIVO_FIJO_ID LEFT JOIN listas_atributos C ON B.TIPO = C.LISTA_ATRIB_ID WHERE SU.UNIDAD NOT LIKE "%H%" order by UNIDAD;');
+    const units = await DWH.fetchDWHdata('select U.* from SSUSA_UNIDADES_ACTIVAS U LEFT JOIN CONFIGURACION_UNIDADES C ON U.TIPO = C.TIPO WHERE UNIDAD NOT LIKE "%H%" AND C.REQUIERE_MUESTREO_FLEETSYNC = 1 order by UNIDAD;');
 
     const clients = await DWH.fetchDWHdata('select CLIENTE_ID, NOMBRE from clientes');
 
@@ -28,7 +29,7 @@ async function processData() {
 
 
     const processedData = units.map((unit) => {
-      const task = tasks.find((t) => t.UNIDAD === unit.UNIDAD && t.FECHA_CONCLUIDA === null);
+      const task = tasks.find((t) => t.UNIDAD === unit.UNIDAD && t.TAREA_CONCLUIDA === null);
       const gps = gpsData.find((g) => g.noEconomico === unit.UNIDAD);
     
       let timeDifferenceHours = null;
@@ -39,9 +40,11 @@ async function processData() {
       let responsable = 'Sin responsable';
       let tipo = 'No encontrado';
       let fechavencimiento = 'Sin fecha';
+      let base = 'Sin base';
       let timeDifference;
       let fechainicio = 'Sin fecha inicio';
       tipo = unit.TIPO;
+      base = unit.BASE;
     
       if (task) {
         const client = clients.find((c) => c.CLIENTE_ID === task.CLIENTE);
@@ -84,6 +87,7 @@ async function processData() {
         ASUNTO : asunto,
         ETAPA: etapa,
         TIPO: tipo,
+        BASE: base,
         CONTACTO : contacto,
         RESPONSABLE : responsable,
         FECHA_VENCIMIENTO : fechavencimiento,

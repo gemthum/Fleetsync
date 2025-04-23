@@ -1,4 +1,6 @@
 const Firebird = require('node-firebird');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 
@@ -11,7 +13,8 @@ require('dotenv').config();
         user: process.env.FIREBIRD_USER,
         password: process.env.FIREBIRD_PASSWORD,
       };
-    const query = process.env.FIREBIRD_QUERY;
+    const query = fs.readFileSync(path.join(__dirname, 'zeusq.sql'), 'utf-8');
+    // const query = process.env.FIREBIRD_QUERY;
     return new Promise((resolve, reject) => {
       Firebird.attach(firebirdOptions, (err, db) => {
         if (err) {
