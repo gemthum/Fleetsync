@@ -1,38 +1,37 @@
-SELECT T.FOLIO, T.FECHA_INICIO, T.HORA_INICIO, 
-    case
-    WHEN T.TIPO_ID = 6529
-    THEN (SELECT OTC.UNIDAD FROM LIBRES_PROYECTOS_6529 OTC WHERE OTC.TAREA_ID = T.TAREA_ID)
-    
-    WHEN T.TIPO_ID = 7405
-    THEN (SELECT OTP.UNIDAD FROM LIBRES_PROYECTOS_7405 OTP WHERE OTP.TAREA_ID = T.TAREA_ID)
-    
-    WHEN T.TIPO_ID = 7427
-    THEN (SELECT OTG.UNIDAD FROM LIBRES_PROYECTOS_7427 OTG WHERE OTG.TAREA_ID = T.TAREA_ID)
-    end AS UNIDAD, 
-    case
-    WHEN 
-        (SELECT ETT2.PRIORIDAD_ID
-         FROM ESTATUS_TAREAS_TRACKING ETT2
-         WHERE ETT2.TAREA_ID = T.TAREA_ID and ETT2.PRIORIDAD_ID IN (4819, 5430, 7721, 7735, 7747, 7756)) IN (4819, 5430, 7721, 7735, 7747, 7756)
-         THEN 'SI'
-    WHEN
-        (SELECT ETT2.PRIORIDAD_ID
-         FROM ESTATUS_TAREAS_TRACKING ETT2
-         WHERE ETT2.TAREA_ID = T.TAREA_ID and ETT2.PRIORIDAD_ID IN (6578,6935,6936,6937,6938,7727,7728,7729,7730,7739)) IN (6578,6935,6936,6937,6938,7727,7728,7729,7730,7739)
-        THEN
-        'SI'
-    WHEN
-        (SELECT ETT2.PRIORIDAD_ID   
-         FROM ESTATUS_TAREAS_TRACKING ETT2
-         WHERE ETT2.TAREA_ID = T.TAREA_ID and ETT2.PRIORIDAD_ID IN (6942, 7734, 7746)) IN (6942, 7734, 7746)
-        THEN
-        'SI'
-    ELSE NULL END AS TAREA_CONCLUIDA, P.NOMBRE AS ETAPA, 
-    T.CLIENTE_ID as CLIENTE, T.ASUNTO, CC.NOMBRE AS CONTACTO, T.USUARIO_RESPONSABLE AS RESPONSABLE, 
-    EXTRACT(DAY FROM T.FECHA_VENCIMIENTO) || '.' || LPAD(EXTRACT(MONTH FROM T.FECHA_VENCIMIENTO), 2, '0') || '.' || EXTRACT(YEAR FROM T.FECHA_VENCIMIENTO) || ' ' || LPAD(EXTRACT(HOUR FROM T.HORA_VENCIMIENTO), 2, '0') || ':' || LPAD(EXTRACT(MINUTE FROM T.HORA_VENCIMIENTO), 2, '0') AS FECHA_HORA_VENCIMIENTO, 
-    EXTRACT(DAY FROM T.FECHA_INICIO) || '.' || LPAD(EXTRACT(MONTH FROM T.FECHA_INICIO), 2, '0') || '.' || EXTRACT(YEAR FROM T.FECHA_INICIO) || ' ' || LPAD(EXTRACT(HOUR FROM T.HORA_INICIO), 2, '0') || ':' || LPAD(EXTRACT(MINUTE FROM T.HORA_INICIO), 2, '0') AS FECHA_HORA_INICIO 
-FROM TAREAS T 
-LEFT JOIN PRIORIDAD_TAREAS P ON T.PRIORIDAD_ID = P.PRIORIDAD_TAREA_ID
-LEFT JOIN TIPOS_TAREAS TT ON T.TIPO_ID = TT.TIPO_TAREA_ID
+const Firebird = require('node-firebird');
+const fs = require('fs');
+const path = require('path');
+require('dotenv').config();
+
+
+  
+  async function fetchZeusData() {
+    const firebirdOptions = {
+        host: process.env.FIREBIRD_HOST,
+        port: process.env.FIREBIRD_PORT,
+        database: process.env.FIREBIRD_DB_PATH,
+        user: process.env.FIREBIRD_USER,
+        password: process.env.FIREBIRD_PASSWORD,
+      };
+    const query = fs.readFileSync(path.join(__dirname, 'zeusq.sql'), 'utf-8');
+    // const query = process.env.FIREBIRD_QUERY;
+    return new Promise((resolve, reject) => {
+      Firebird.attach(firebirdOptions, (err, db) => {
+        if (err) {
+          return reject(err);
+        }
+  
+        db.query(query, (err, result) => {
+          db.detach();
+          if (err) {
+            return reject(err);
+          }
+          resolve(result);
+        });
+      });
+    });
+  }
+
+  module.exports = { fetchZeusData };
 LEFT JOIN CONTACTO_CONTACTOS CC ON T.CONTACTO_CONTACTO_ID = CC.CONTACTO_CONTACTO_ID 
 WHERE FECHA_INICIO > DATEADD(-5 day to CAST('Now' as date)) ORDER BY FECHA_INICIO desc
