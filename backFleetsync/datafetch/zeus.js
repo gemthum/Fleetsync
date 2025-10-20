@@ -32,6 +32,4 @@ require('dotenv').config();
     });
   }
 
-  module.exports = { fetchZeusData };
-LEFT JOIN CONTACTO_CONTACTOS CC ON T.CONTACTO_CONTACTO_ID = CC.CONTACTO_CONTACTO_ID 
-WHERE FECHA_INICIO > DATEADD(-5 day to CAST('Now' as date)) ORDER BY FECHA_INICIO desc
+  module.exports = { fetchZeusData }
