@@ -13,10 +13,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    //const token = localStorage.getItem('token');
-    /*if (to.path === '/dashboard' && !token) {
+    const token = localStorage.getItem('token');
+    if (to.path === '/dashboard' && !token) {
       return next('/');
-    }*/
+    }
     next();
   });
   
