@@ -12,12 +12,15 @@ const DWH = require('./datafetch/units');
 const zeus = require('./datafetch/zeus');
 const encontrak = require('./datafetch/encontrak');
 
+const allowedOrigin = process.env.FRONTEND_URL || 'http://localhost:8080';
+
 const app = express();
 app.use(cors({
-  origin: 'http://ssusa.zapto.org:3000',
+  origin: allowedOrigin,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
 }));
+
 app.use(express.json());
 app.use('/auth', authRoutes);
 
