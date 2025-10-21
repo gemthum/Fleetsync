@@ -10,7 +10,7 @@ async function fetchDWHdata(query) {
         password: process.env.DWH_PWD,
         database: process.env.DWH_DB,
       });
-
+  
     const [rows] = await pool.query(query);
     return rows;
   }

@@ -395,7 +395,7 @@ export default {
   color: #333; 
 }
 
-/* Estilo para items seleccionados en multi-select */
+/* Estilo para items seleccionados en multi-select.*/
 .dropdown-list li.selected {
     background-color: #007bff;
     color: white;
